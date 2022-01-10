@@ -13,6 +13,7 @@
 		EBEB319A278C13F800687E2B /* BlogLoader.h in Headers */ = {isa = PBXBuildFile; fileRef = EBEB318C278C13F700687E2B /* BlogLoader.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EBEB31A4278C149B00687E2B /* BlogItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBEB31A3278C149B00687E2B /* BlogItem.swift */; };
 		EBEB31A9278C263A00687E2B /* BlogItemsLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBEB31A8278C263A00687E2B /* BlogItemsLoader.swift */; };
+		EBEB31AC278C2B5100687E2B /* RemoteBlogLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBEB31AB278C2B5100687E2B /* RemoteBlogLoaderTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -33,6 +34,7 @@
 		EBEB3198278C13F800687E2B /* BlogLoaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlogLoaderTests.swift; sourceTree = "<group>"; };
 		EBEB31A3278C149B00687E2B /* BlogItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlogItem.swift; sourceTree = "<group>"; };
 		EBEB31A8278C263A00687E2B /* BlogItemsLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlogItemsLoader.swift; sourceTree = "<group>"; };
+		EBEB31AB278C2B5100687E2B /* RemoteBlogLoaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteBlogLoaderTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,8 +79,7 @@
 			children = (
 				EBEB318C278C13F700687E2B /* BlogLoader.h */,
 				EBEB318D278C13F700687E2B /* BlogLoader.docc */,
-				EBEB31A3278C149B00687E2B /* BlogItem.swift */,
-				EBEB31A8278C263A00687E2B /* BlogItemsLoader.swift */,
+				EBEB31AA278C2A9700687E2B /* BlogFeature */,
 			);
 			path = BlogLoader;
 			sourceTree = "<group>";
@@ -87,8 +88,18 @@
 			isa = PBXGroup;
 			children = (
 				EBEB3198278C13F800687E2B /* BlogLoaderTests.swift */,
+				EBEB31AB278C2B5100687E2B /* RemoteBlogLoaderTests.swift */,
 			);
 			path = BlogLoaderTests;
+			sourceTree = "<group>";
+		};
+		EBEB31AA278C2A9700687E2B /* BlogFeature */ = {
+			isa = PBXGroup;
+			children = (
+				EBEB31A3278C149B00687E2B /* BlogItem.swift */,
+				EBEB31A8278C263A00687E2B /* BlogItemsLoader.swift */,
+			);
+			path = BlogFeature;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -210,6 +221,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EBEB31AC278C2B5100687E2B /* RemoteBlogLoaderTests.swift in Sources */,
 				EBEB3199278C13F800687E2B /* BlogLoaderTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
