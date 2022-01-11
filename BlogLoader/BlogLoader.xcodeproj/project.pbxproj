@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EB5B7BAF278DAD6F00860B39 /* RemoteBlogLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB5B7BAE278DAD6F00860B39 /* RemoteBlogLoader.swift */; };
 		EBEB318E278C13F700687E2B /* BlogLoader.docc in Sources */ = {isa = PBXBuildFile; fileRef = EBEB318D278C13F700687E2B /* BlogLoader.docc */; };
 		EBEB3194278C13F800687E2B /* BlogLoader.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBEB3189278C13F700687E2B /* BlogLoader.framework */; };
 		EBEB3199278C13F800687E2B /* BlogLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBEB3198278C13F800687E2B /* BlogLoaderTests.swift */; };
@@ -27,6 +28,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		EB5B7BAE278DAD6F00860B39 /* RemoteBlogLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteBlogLoader.swift; sourceTree = "<group>"; };
 		EBEB3189278C13F700687E2B /* BlogLoader.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BlogLoader.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EBEB318C278C13F700687E2B /* BlogLoader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BlogLoader.h; sourceTree = "<group>"; };
 		EBEB318D278C13F700687E2B /* BlogLoader.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = BlogLoader.docc; sourceTree = "<group>"; };
@@ -56,6 +58,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		EB5B7BAD278DAD0800860B39 /* BlogLoaderAPI */ = {
+			isa = PBXGroup;
+			children = (
+				EB5B7BAE278DAD6F00860B39 /* RemoteBlogLoader.swift */,
+			);
+			path = BlogLoaderAPI;
+			sourceTree = "<group>";
+		};
 		EBEB317F278C13F700687E2B = {
 			isa = PBXGroup;
 			children = (
@@ -78,6 +88,7 @@
 			isa = PBXGroup;
 			children = (
 				EBEB318C278C13F700687E2B /* BlogLoader.h */,
+				EB5B7BAD278DAD0800860B39 /* BlogLoaderAPI */,
 				EBEB318D278C13F700687E2B /* BlogLoader.docc */,
 				EBEB31AA278C2A9700687E2B /* BlogFeature */,
 			);
@@ -211,6 +222,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EB5B7BAF278DAD6F00860B39 /* RemoteBlogLoader.swift in Sources */,
 				EBEB31A9278C263A00687E2B /* BlogItemsLoader.swift in Sources */,
 				EBEB31A4278C149B00687E2B /* BlogItem.swift in Sources */,
 				EBEB318E278C13F700687E2B /* BlogLoader.docc in Sources */,

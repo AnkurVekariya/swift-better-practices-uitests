@@ -6,39 +6,30 @@
 //
 
 import XCTest
-
-class RemoteBlogLoader {
-    let client:HttpClient
-    let url: URL
-    init(client: HttpClient, url: URL) {
-        self.client = client
-        self.url = url
-    }
-    func load() {
-        client.get(From: self.url)
-    }
-    
-}
-
-protocol HttpClient {
-    func get(From url: URL)
-}
-
-
+import BlogLoader
 
 class RemoteBlogLoaderTests: XCTestCase {
 
     func test_init_doesNotRequestDataFromUrl() {
       
         let (_,client) = makeSUT()
-        XCTAssertNil(client.requestedUrl)
+        XCTAssertTrue(client.requestedUrlArray.isEmpty)
     }
 
     func test_load_requestDataFromUrl() {
         let url = URL(string: "https://google.com")!
         let (sut,client) = makeSUT(url: url)
         sut.load()
-        XCTAssertEqual(client.requestedUrl, url)
+        XCTAssertEqual(client.requestedUrlArray, [url])
+        
+    }
+    
+    func test_loadTwice_requestDataFromUrl() {
+        let url = URL(string: "https://google.com")!
+        let (sut,client) = makeSUT(url: url)
+        sut.load()
+        sut.load()
+        XCTAssertEqual(client.requestedUrlArray, [url,url])
         
     }
     
@@ -52,10 +43,12 @@ class RemoteBlogLoaderTests: XCTestCase {
     
     class HTTPClientSpy: HttpClient {
         
-        var requestedUrl: URL?
+//        var requestedUrl: URL?
+        var requestedUrlArray = [URL]()
         
         func get(From url: URL) {
-            requestedUrl = url
+            requestedUrlArray.append(url)
+//            requestedUrl = url
         }
     }
 }
