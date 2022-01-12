@@ -19,7 +19,7 @@ class RemoteBlogLoaderTests: XCTestCase {
     func test_load_requestDataFromUrl() {
         let url = URL(string: "https://google.com")!
         let (sut,client) = makeSUT(url: url)
-        sut.load()
+        sut.load{_ in }
         XCTAssertEqual(client.requestedUrlArray, [url])
         
     }
@@ -27,10 +27,42 @@ class RemoteBlogLoaderTests: XCTestCase {
     func test_loadTwice_requestDataFromUrl() {
         let url = URL(string: "https://google.com")!
         let (sut,client) = makeSUT(url: url)
-        sut.load()
-        sut.load()
+        sut.load{_ in }
+        sut.load{_ in }
         XCTAssertEqual(client.requestedUrlArray, [url,url])
         
+    }
+    
+    func test_load_deliverErrorOnClientError() {
+        let (sut,client) = makeSUT()
+        
+        var capturedErrors =  [RemoteBlogLoader.Error]()
+        //sut.load { capturedErrors.append($0)}
+        
+        sut.load { error in
+            capturedErrors.append(error)
+        }
+        
+        let clientError = NSError(domain: "Test", code: 0)
+        
+        client.complete(with: clientError)
+        
+        XCTAssertEqual(capturedErrors, [.connectivity])
+      
+        
+    }
+    
+    func test_load_deliverErrorOnClientHttpNon200Code() {
+        let (sut,client) = makeSUT()
+        
+        [199, 201, 300, 400, 500].enumerated().forEach { index, code in
+            
+            var capturedErrors =  [RemoteBlogLoader.Error]()
+            sut.load { capturedErrors.append($0)}
+            client.complete(withErrorCode: code, at: index)
+            XCTAssertEqual(capturedErrors, [.invalidData])
+        }
+    
     }
     
     // MARK: - Helper
@@ -43,12 +75,28 @@ class RemoteBlogLoaderTests: XCTestCase {
     
     class HTTPClientSpy: HttpClient {
         
-//        var requestedUrl: URL?
-        var requestedUrlArray = [URL]()
+        private var message = [(url: URL, completion:(HttpClientResult)-> Void)]()
+
+        var requestedUrlArray : [URL] {
+            return message.map {$0.url}
+        }
+
+        func get(From url: URL, completion: @escaping (HttpClientResult) -> Void) {
+            message.append((url,completion))
+        }
         
-        func get(From url: URL) {
-            requestedUrlArray.append(url)
-//            requestedUrl = url
+        func complete(with error: Error, at index: Int = 0) {
+            message[index].completion(.failure(error))
+        }
+        
+        func complete(withErrorCode code: Int, at index:Int = 0) {
+            let response = HTTPURLResponse(url: requestedUrlArray[index],
+                                           statusCode:code,
+                                           httpVersion: nil,
+                                           headerFields: nil)!
+            
+            message[index].completion(.success(response))
+            
         }
     }
 }
