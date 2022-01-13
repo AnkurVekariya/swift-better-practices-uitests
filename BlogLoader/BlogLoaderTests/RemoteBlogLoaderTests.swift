@@ -71,10 +71,47 @@ class RemoteBlogLoaderTests: XCTestCase {
             let emptyJSON = Data.init("{\"items\": []}".utf8)
             
             client.complete(withErrorCode: 200, data: emptyJSON)
-        }        
+        }
     }
     
-    
+    func test_load_deliversItemsOn200ResponseWithJSONItem() {
+        let (sut, client) = makeSUT()
+        
+        let item1 = BlogItem(
+            id: UUID(),
+            description: nil,
+            location: nil,
+            imageUrl: URL(string: "https://a-imagr.com")!)
+        
+        let itemJSON = [
+            "id": item1.id.uuidString,
+            "image": item1.imageUrl.absoluteString,
+        ] as [String : Any]
+        
+        let item2 = BlogItem(
+            id: UUID(),
+            description: "a description",
+            location: "a location",
+            imageUrl: URL(string: "https://b-imagr.com")!)
+        
+        let itemJSON2 = [
+            "id": item2.id.uuidString,
+            "description": item2.description!,
+            "location": item2.location!,
+            "image": item2.imageUrl.absoluteString,
+        ] as [String : Any]
+        
+        let jsonResponse = [
+            "items": [itemJSON,itemJSON2]
+        ]
+        
+        expect(sut, with: .success([item1,item2])) {
+            let json = try! JSONSerialization.data(withJSONObject: jsonResponse)
+            client.complete(withErrorCode: 200, data: json)
+            
+        }
+        
+    }
     
     // MARK: - Helper
     
