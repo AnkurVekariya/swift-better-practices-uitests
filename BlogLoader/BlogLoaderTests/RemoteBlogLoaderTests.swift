@@ -63,6 +63,12 @@ class RemoteBlogLoaderTests: XCTestCase {
         })
         
     }
+    
+    func test_load_deliverNoItemsOn200HTTPResponseWithEmptyList() {
+        let (sut, client) = makeSUT()
+        
+        
+    }
     // MARK: - Helper
     
     private func makeSUT(url : URL = URL(string: "https://google.com")!) -> (RemoteBlogLoader, HTTPClientSpy) {
@@ -73,14 +79,14 @@ class RemoteBlogLoaderTests: XCTestCase {
     
     private func expect(_ sut: RemoteBlogLoader, with error: RemoteBlogLoader.Error, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
         
-        var captureErrors = [RemoteBlogLoader.Error]()
+        var captureErrors = [RemoteBlogLoader.Result]()
         sut.load { error in
             captureErrors.append(error)
         }
         
         action()
         
-        XCTAssertEqual(captureErrors, [error], file: file, line: line)
+        XCTAssertEqual(captureErrors, [.failure(error)], file: file, line: line)
         
     }
     

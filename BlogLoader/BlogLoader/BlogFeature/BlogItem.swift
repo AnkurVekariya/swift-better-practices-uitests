@@ -7,9 +7,9 @@
 
 import Foundation
 
-struct BlogItem {
-    let id: UUID
-    let Description: String?
-    let Location: String?
-    let image: URL
+public struct BlogItem: Equatable {
+    public let id: UUID
+    public let Description: String?
+    public let Location: String?
+    public let image: URL
 }

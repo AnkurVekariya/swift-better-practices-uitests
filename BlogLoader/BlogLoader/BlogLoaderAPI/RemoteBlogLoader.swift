@@ -25,19 +25,24 @@ public final class RemoteBlogLoader {
         case invalidData
     }
     
+    public enum Result: Equatable {
+        case success([BlogItem])
+        case failure(Error)
+    }
+    
     public init(client: HttpClient, url: URL) {
         self.client = client
         self.url = url
     }
     
-    public func load(completion: @escaping (Error) -> Void) {
+    public func load(completion: @escaping (Result) -> Void) {
         client.get(From: self.url){ result in
             
             switch result {
             case .success:
-                completion(.invalidData)
+                completion(.failure(.invalidData))
             case .failure:
-                completion(.connectivity)
+                completion(.failure(.connectivity))
             }
             
         }
