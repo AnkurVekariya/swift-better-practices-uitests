@@ -39,13 +39,15 @@ public final class RemoteBlogLoader {
         client.get(From: self.url){ result in
             
             switch result {
-            case let .success(data, _):
-                if let root = try? JSONDecoder().decode(Root.self, from: data) {
-                    completion(.success(root.items))
-                } else {
+            case let .success(data, response):
+                do {
+                    let items = try BlogItemMapper.map(data, response)
+                        completion(.success(items))
+                    
+                } catch {
                     completion(.failure(.invalidData))
                 }
-            case .failure:
+             case .failure:
                 completion(.failure(.connectivity))
             }
             
@@ -53,7 +55,32 @@ public final class RemoteBlogLoader {
     }
 }
 
-private struct Root: Decodable {
+private class BlogItemMapper {
     
-    let items: [BlogItem]
+    private struct Root: Decodable {
+        let items: [item]
+    }
+
+    private struct item: Decodable {
+        
+        public let id: UUID
+        public let description: String?
+        public let location: String?
+        public let image: URL
+        
+        var item: BlogItem {
+            return BlogItem(id: id, description: description, location: location, imageUrl: image)
+        }
+    }
+
+    
+    static func map(_ data: Data, _ response: HTTPURLResponse) throws -> [BlogItem] {
+        guard response.statusCode == 200 else {
+            throw RemoteBlogLoader.Error.invalidData
+        }
+        
+        return try JSONDecoder().decode(Root.self, from: data).items.map{$0.item}
+        
+    }
 }
+

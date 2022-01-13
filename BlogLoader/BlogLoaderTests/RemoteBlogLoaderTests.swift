@@ -48,7 +48,8 @@ class RemoteBlogLoaderTests: XCTestCase {
   
             [199, 201, 300, 400, 500].enumerated().forEach { index, code in
                 expect(sut, with: .failure(.invalidData), when: {
-                 client.complete(withErrorCode: code, at: index)
+                let data = itemJSON([])
+                 client.complete(withErrorCode: code, data: data, at: index)
                 })
             }
   
@@ -157,7 +158,7 @@ class RemoteBlogLoaderTests: XCTestCase {
             message[index].completion(.failure(error))
         }
         
-        func complete(withErrorCode code: Int, data: Data = Data(), at index:Int = 0) {
+        func complete(withErrorCode code: Int, data: Data, at index:Int = 0) {
             let response = HTTPURLResponse(url: requestedUrlArray[index],
                                            statusCode:code,
                                            httpVersion: nil,
