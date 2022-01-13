@@ -36,41 +36,52 @@ class RemoteBlogLoaderTests: XCTestCase {
     func test_load_deliverErrorOnClientError() {
         let (sut,client) = makeSUT()
         
-        var capturedErrors =  [RemoteBlogLoader.Error]()
-        //sut.load { capturedErrors.append($0)}
-        
-        sut.load { error in
-            capturedErrors.append(error)
+        expect(sut, with: .connectivity) {
+            let clientError = NSError(domain: "Test", code: 0)
+            client.complete(with: clientError)
         }
-        
-        let clientError = NSError(domain: "Test", code: 0)
-        
-        client.complete(with: clientError)
-        
-        XCTAssertEqual(capturedErrors, [.connectivity])
-      
-        
+
     }
     
     func test_load_deliverErrorOnClientHttpNon200Code() {
         let (sut,client) = makeSUT()
-        
-        [199, 201, 300, 400, 500].enumerated().forEach { index, code in
-            
-            var capturedErrors =  [RemoteBlogLoader.Error]()
-            sut.load { capturedErrors.append($0)}
-            client.complete(withErrorCode: code, at: index)
-            XCTAssertEqual(capturedErrors, [.invalidData])
-        }
-    
+  
+            [199, 201, 300, 400, 500].enumerated().forEach { index, code in
+                expect(sut, with: .invalidData, when: {
+                 client.complete(withErrorCode: code, at: index)
+                })
+            }
+  
     }
     
+    func tests_load_deliversErrorOn200HTTPResponseCodeWithInvalidJSON() {
+        let (sut, client) = makeSUT()
+        
+        expect(sut, with: .invalidData, when: {
+            let invalidJSON = Data(bytes:"Invalid Json".utf8 )
+            client.complete(withErrorCode: 200, data: invalidJSON)
+        })
+        
+    }
     // MARK: - Helper
     
     private func makeSUT(url : URL = URL(string: "https://google.com")!) -> (RemoteBlogLoader, HTTPClientSpy) {
         let client = HTTPClientSpy()
         let sut = RemoteBlogLoader(client: client, url:url)
         return (sut, client)
+    }
+    
+    private func expect(_ sut: RemoteBlogLoader, with error: RemoteBlogLoader.Error, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
+        
+        var captureErrors = [RemoteBlogLoader.Error]()
+        sut.load { error in
+            captureErrors.append(error)
+        }
+        
+        action()
+        
+        XCTAssertEqual(captureErrors, [error], file: file, line: line)
+        
     }
     
     class HTTPClientSpy: HttpClient {
@@ -89,13 +100,13 @@ class RemoteBlogLoaderTests: XCTestCase {
             message[index].completion(.failure(error))
         }
         
-        func complete(withErrorCode code: Int, at index:Int = 0) {
+        func complete(withErrorCode code: Int, data: Data = Data(), at index:Int = 0) {
             let response = HTTPURLResponse(url: requestedUrlArray[index],
                                            statusCode:code,
                                            httpVersion: nil,
                                            headerFields: nil)!
             
-            message[index].completion(.success(response))
+            message[index].completion(.success(data, response))
             
         }
     }
